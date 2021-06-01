@@ -26,8 +26,10 @@ class FinalSummative {
         // spliting the blank spaces and storing each ion into their coresponding compound array
         String[] compoundOne = txtfieldOne.getText().split(" ");
         String[] compoundTwo = txtfieldTwo.getText().split(" ");
-        int[] firstMole = new int[3];
-        int[] secondMole = new int[3];
+        int[] firstMole = {1, 1, 1};
+        int[] secondMole = {1, 1, 1};
+        int[] newFirstMole = {1, 1, 1};
+        int[] newSecondMole = {1, 1, 1};
 
 
         // Condition: if the user inputs a chemical equation
@@ -35,8 +37,32 @@ class FinalSummative {
             // call identifyFirstNum method
             identifyFirstNum(compoundOne, firstMole);
             identifyFirstNum(compoundTwo, secondMole);
+
+            // call cationAmount method
+            cationAmount(compoundOne, firstMole);
+            cationAmount(compoundTwo, secondMole);
+
+            // call anionAmount method
+            anionAmount(compoundOne, firstMole);
+            anionAmount(compoundTwo, secondMole);
+
+            try {
+                // call scanCharges method
+                scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole);
+            }
+            // catch file not found error when reading the method
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // call cancelSameCharge method
+            cancelSameCharge();
+
+            // add brackets method
+            addBrackets(compoundOne, compoundTwo, newFirstMole, newSecondMole);
         }
         
+
         try {
             // call doesItExist method 
             checkPercipitate(reaction, compoundOne, compoundTwo);
@@ -45,7 +71,6 @@ class FinalSummative {
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        // add brackets method
 
 
         // display the product after a reaction occurs
@@ -70,6 +95,42 @@ class FinalSummative {
         
     }
     /**
+     * Description: check how many anions there are in the compound and store that amount, and 
+     *              remove brackets if necessary.
+     * 
+     * @author Ian
+     * @param compound  the String array containing the compound the user inputted
+     * @param moles    the int array for storing the amount of each ion in the compound
+     */
+    public static void anionAmount(String[] compound, int[] moles) {
+        // if the anion is multiple
+        if (Character.toString(compound[1].charAt(compound[1].length()-1)).matches("-?\\d+")) {
+            // store the amount
+            moles[2] = Character.getNumericValue(compound[1].charAt(compound[1].length()-1));
+            compound[1] = compound[1].substring(0, compound[1].length()-1);     // remove the integer
+        }
+
+        // store the polyatomic ion and remove the brakets
+        if (Character.toString(compound[1].charAt(0)).equals("(")) {
+            compound[1] = compound[1].substring(1, compound[1].length()-1);
+        }
+    }
+    /**
+     * Description: check how many cations there are in the compound and store that amount.
+     * 
+     * @author Ian
+     * @param compound  the String array containing the compound the user inputted
+     * @param moles    the int array for storing the amount of each ion in the compound
+     */
+    public static void cationAmount(String[] compound, int[] moles) {
+        // if cation is more than one
+        if (Character.toString(compound[0].charAt(compound[0].length()-1)).matches("-?\\d+")) {
+            // store the amount of the cation
+            moles[1] = Character.getNumericValue(compound[0].charAt(compound[0].length()-1));
+            compound[0] = compound[0].substring(0, compound[0].length()-1);     // remove the integer
+        }
+    }
+    /**
      * Description: if the user inputted a number before the compound, store it to the charges array and remove it
      *              from the compound array.
      * 
@@ -83,10 +144,6 @@ class FinalSummative {
             moles[0] = Integer.parseInt(compound[0]);   // store the integer
             compound[0] = compound[1];      // switch indexes
             compound[1] = compound[2];      // switch indexes
-        }
-        // if the first index of the compound isn't a number
-        else {
-            moles[0] = 1;   // store the charge as 1
         }
     }
 }
