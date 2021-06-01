@@ -55,10 +55,22 @@ class FinalSummative {
                 e.printStackTrace();
             }
 
-            // call cancelSameCharge method
-            cancelSameCharge();
+            // call reduceCharges method
+            reduceCharges(newFirstMole);
+            reduceCharges(newSecondMole);
 
-            // add brackets method
+            // call arrangeMoles method
+            arrangeMoles(firstMole);
+            arrangeMoles(secondMole);
+
+            // call balance method
+            balance(firstMole, secondMole, newFirstMole, newSecondMole);
+
+            // call removeSingularIons method
+            removeSingularIons(newFirstMole);
+            removeSingularIons(newSecondMole);
+
+            // call addBrackets method
             addBrackets(compoundOne, compoundTwo, newFirstMole, newSecondMole);
         }
         
@@ -93,6 +105,20 @@ class FinalSummative {
      */
     public static void checkPercipitate(boolean[] reaction, String[] arrOne, String[] arrTwo) throws FileNotFoundException{
         
+    }
+    /**
+     * Description: reduce the same or factorable charges
+     * 
+     * @author Ian
+     * @param mole    the int array containing charges from the csv file
+     */
+    public static void reduceCharges(int[] mole) {
+        for (int i = 2; i < 5; i++) {
+            if ((mole[1]%i == 0 ) && (mole[2]%i == 0)) {
+                mole[1] = mole[1]/i;
+                mole[2] = mole[2]/i;
+            }
+        }
     }
     /**
      * Description: check how many anions there are in the compound and store that amount, and 
