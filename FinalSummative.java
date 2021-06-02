@@ -180,7 +180,51 @@ class FinalSummative {
      * @throws FileNotFoundException if the file is not found exception has occured when scanning the file
      */
     public static void readFile(String path) throws FileNotFoundException{
-        // The path to the csv file may vary
+        // need path
+        //Parsing a csv file into BufferedReader class constructor
+        BufferedReader br = new BufferedReader(new FileReader(path));
+
+        // Variable line that equals to nothing right now
+        String line = "";
+
+        // Try, catch, and finally statement are for if the code goes wrong
+        // Try block goes first 
+        try{
+            // A while loop that infinantly go over the file and read each line unitl it is empty
+            while((line = br.readLine()) != null){
+                // A string array that seperates the different infos by the comma in the file
+                String[] value = line.split(",");
+            }
+        }
+        // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        // Finally block that will be executed in every case, success or caught exception
+        finally{
+            // Close the bufferscanner if all lines in the file is read
+            if(br != null){
+                try{
+                    br.close();
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+     /**
+     * Description: scans the charges.csv file
+     * 
+     * @author William Wu
+     * @param path the string that stores the path to each csv file needed to scan
+     * @throws FileNotFoundException if the file is not found exception has occured when scanning the file
+     */
+    public static void scanCharges(String path) throws FileNotFoundException{
+       // need path
 
         //Parsing a csv file into BufferedReader class constructor
         BufferedReader br = new BufferedReader(new FileReader(path));
