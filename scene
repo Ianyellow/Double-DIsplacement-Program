@@ -133,9 +133,6 @@ public class App extends Application {
                     showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "Second Compound is invalid. Please enter a valid compound");
                     return;
                 }
-                if(allCalculation(compoundOneField, compoundTwoField) == true){
-                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "Second Compound is invalid. Please enter a valid compound");
-                }
                 // Successful 
                 showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Calculate Successful!", "Answer:  " ); // output the answer 
             }
