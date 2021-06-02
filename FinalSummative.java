@@ -104,7 +104,58 @@ class FinalSummative {
      * @throws FileNotFoundException
      */
     public static void checkPercipitate(boolean[] reaction, String[] arrOne, String[] arrTwo) throws FileNotFoundException{
+        // The path to the csv file may vary
+
+        //    LEO, YOU WILL NEED TO DOWNLOAD THE FILE IN THE SAME FOLDER OF THE JAVA PROJECT
+        //              FOR EXAMPLE :   src\\solubility.csv
+        String path = "solubility.csv";
         
+        //Parsing a csv file into BufferedReader class constructor
+        BufferedReader br = new BufferedReader(new FileReader(path));
+
+        // Variable line that equals to nothing right now
+        String line = "";
+
+        // Try, catch, and finally statement are for if the code goes wrong
+        // Try block goes first 
+        try{
+            // A while loop that infinantly go over the file and read each line unitl it is empty
+            while((line = br.readLine()) != null){
+                // A string array that seperates the different infos by the comma in the file
+                String[] value = line.split(",");
+
+                // condition: if anion in compound 1 and 2 are found
+                if ((value[0].indexOf(arrOne[1]) > -1) || (value[0].indexOf(arrTwo[1]) > -1 )) {
+                    // iterate across the horizontal row
+                    for (String ion : value) {
+                        // condition: if the anion from compound 1 is in the same row as the cation from compound 2
+                        // Or   if the anion from compound 2 is in the same row as the cation from compound 1
+                        if (  (  ion.indexOf(arrTwo[0]) > -1 && (value[0].indexOf(arrOne[1]) > -1)) || (ion.indexOf(arrOne[0]) > -1 && (value[0].indexOf(arrTwo[1]) > -1))  ) {
+                            reaction[0] = true;     // a percipitate forms --> reaction occurs
+                        }
+                    }
+                }
+            }
+        }
+        // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        // Finally block that will be executed in every case, success or caught exception
+        finally{
+            // Close the bufferscanner if all lines in the file is read
+            if(br != null){
+                try{
+                    br.close();
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     /**
      * Description: reduce the same or factorable charges
