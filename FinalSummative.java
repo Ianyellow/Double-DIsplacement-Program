@@ -17,15 +17,15 @@ class FinalSummative {
         int accum = 0;
 
         // indentify if the user inputs a chemical or word equation
-        for (int i = 0; i < txtfiieldOne.length(); i ++) {
-            if (Character.isLowerCase(txtfiieldOne.charAt(i)) == true) {
+        for (int i = 0; i < compoundOneField.length(); i ++) {
+            if (Character.isLowerCase(compoundOneField.charAt(i)) == true) {
                 accum++;
             }
         }
 
         // spliting the blank spaces and storing each ion into their coresponding compound array
-        String[] compoundOne = txtfieldOne.getText().split(" ");
-        String[] compoundTwo = txtfieldTwo.getText().split(" ");
+        String[] compoundOne = compoundOneField.getText().split(" ");
+        String[] compoundTwo = compoundTwoField.getText().split(" ");
         int[] firstMole = {1, 1, 1};
         int[] secondMole = {1, 1, 1};
         int[] newFirstMole = {1, 1, 1};
@@ -94,6 +94,32 @@ class FinalSummative {
         }
     }
     /**
+     * @Description: Balance the chemical equation
+     * 
+     * @author Ian
+     * @param firstMole         int array of the original amount of moles each ion has in compound 1 before reaction
+     * @param secondMole        int array of the original amount of moles each ion has in compound 2 before reaction
+     * @param newFirstMole      int array of the new amount of moles each ion has in compound 1 after reaction
+     * @param newSecondMole     int array of the new amount of moles each ion has in compound 2 after reaction
+     */
+    public static void balance(int[] firstMole, int[] secondMole, int[] newFirstMole, int[] newSecondMole) {
+        // Do something to balance the chemical equation
+    }
+    /**
+     * @Description: remove moles that have an anount of 1, we don't show it as an output
+     * 
+     * @author Ian      
+     * @param moles     the int array storing the amount of each ion in the compound after reaction
+     */
+    public static void removeSingularIons(int[] moles) {
+        // iterating the array to check if it equals to 1
+        for (int i = 0; i < 3; i++) {
+            if (moles[i] == 1) {
+                moles[i] = Integer.parseInt("");    // make the array blank
+            }
+        }
+    }
+    /**
      * @Description: add brackets on polyatomic ions when there's more than one of then
      * 
      * @author Ian
@@ -104,16 +130,16 @@ class FinalSummative {
      */
     public static void addBrackets(String[] compoundOne, String[] compoundTwo, int[] newFirstMole, int[] newSecondMole) {
         // if the polyatomic ion is more than 1 in the reaction
-        if (newFirstMole[2] > 1 && Character.toString(compoundTwo[1].charAt(compoundTwo[1].length()) ).matches("-?\\d+")) {
+        if (Integer.toString(newFirstMole[2]).matches("-?\\d+") && Character.toString(compoundTwo[1].charAt(compoundTwo[1].length()) ).matches("-?\\d+")) {
             compoundTwo[1] = "(" + compoundTwo[1] + ")";    // add brackets
         }
         // if the polyatomic ion in the second compound is more than 1 in the reaction
-        if (newSecondMole[2] > 1 && Character.toString(compoundOne[1].charAt(compoundOne[1].length()) ).matches("-?\\d+")) {
+        if (Integer.toString(newSecondMole[2]).matches("-?\\d+") && Character.toString(compoundOne[1].charAt(compoundOne[1].length()) ).matches("-?\\d+")) {
             compoundOne[1] = "(" + compoundOne[1] + ")";    // add brackets
         }
     }
     /**
-     * Description: find the total amount of moles in the original compound and arrange them in the same 
+     * @Description: find the total amount of moles in the original compound and arrange them in the same 
      *              pattern as the charges after the double displacement reaction
      * 
      * @author Ian 
@@ -123,7 +149,7 @@ class FinalSummative {
     public static void arrangeMoles(int[] firstMole, int[] secondMole) {
         int temp;    // a temporary string
 
-        // iritate accross each index and multiply the amount by the amount at the first index
+        // iterate accross each index and multiply the amount by the amount at the first index
         for (int i = 1; i < 3; i++) {
             firstMole[i] = firstMole[i]*firstMole[0];
             secondMole[i] = secondMole[i]*secondMole[0];
@@ -135,7 +161,7 @@ class FinalSummative {
         secondMole[2] = temp;
     }
     /**
-     * Description: Method to scan the percipitate chart and check if a reaction occurs in a 
+     * @Description: Method to scan the percipitate chart and check if a reaction occurs in a 
      *              word equation.
      * @author Ian & William
      * @param reaction      boolean array to indicate if a reaction occurs or not
@@ -198,7 +224,7 @@ class FinalSummative {
         }
     }
     /**
-     * Description: reduce the same or factorable charges
+     * @Description: reduce the same or factorable charges
      * 
      * @author Ian
      * @param mole    the int array containing charges from the csv file
@@ -212,7 +238,7 @@ class FinalSummative {
         }
     }
     /**
-     * Description: check how many anions there are in the compound and store that amount, and 
+     * @Description: check how many anions there are in the compound and store that amount, and 
      *              remove brackets if necessary.
      * 
      * @author Ian
@@ -233,7 +259,7 @@ class FinalSummative {
         }
     }
     /**
-     * Description: check how many cations there are in the compound and store that amount.
+     * @Description: check how many cations there are in the compound and store that amount.
      * 
      * @author Ian
      * @param compound  the String array containing the compound the user inputted
@@ -248,7 +274,7 @@ class FinalSummative {
         }
     }
     /**
-     * Description: if the user inputted a number before the compound, store it to the charges array and remove it
+     * @Description: if the user inputted a number before the compound, store it to the charges array and remove it
      *              from the compound array.
      * 
      * @author Ian
@@ -264,7 +290,7 @@ class FinalSummative {
         }
     }
     /**
-     * Description: Scan the csv and grab charges
+     * @Description: Scan the csv and grab charges
      * 
      * @author William Wu
      * @param compoundOne   the array containing the first compound in the chemical equation
