@@ -60,8 +60,7 @@ class FinalSummative {
             reduceCharges(newSecondMole);
 
             // call arrangeMoles method
-            arrangeMoles(firstMole);
-            arrangeMoles(secondMole);
+            arrangeMoles(firstMole, secondMole);
 
             // call balance method
             balance(firstMole, secondMole, newFirstMole, newSecondMole);
@@ -95,13 +94,54 @@ class FinalSummative {
         }
     }
     /**
+     * @Description: add brackets on polyatomic ions when there's more than one of then
+     * 
+     * @author Ian
+     * @param compoundOne   the array containing the first compound in the chemical equation
+     * @param compoundTwo   the array containing the second compound in the chemical equation
+     * @param newFirstMole  int array storing the charges of the first compound after the DD reaction
+     * @param newSecondMole int array storing the charges of the seond compound after the DD reaction
+     */
+    public static void addBrackets(String[] compoundOne, String[] compoundTwo, int[] newFirstMole, int[] newSecondMole) {
+        // if the polyatomic ion is more than 1 in the reaction
+        if (newFirstMole[2] > 1 && Character.toString(compoundTwo[1].charAt(compoundTwo[1].length()) ).matches("-?\\d+")) {
+            compoundTwo[1] = "(" + compoundTwo[1] + ")";    // add brackets
+        }
+        // if the polyatomic ion in the second compound is more than 1 in the reaction
+        if (newSecondMole[2] > 1 && Character.toString(compoundOne[1].charAt(compoundOne[1].length()) ).matches("-?\\d+")) {
+            compoundOne[1] = "(" + compoundOne[1] + ")";    // add brackets
+        }
+    }
+    /**
+     * Description: find the total amount of moles in the original compound and arrange them in the same 
+     *              pattern as the charges after the double displacement reaction
+     * 
+     * @author Ian 
+     * @param firstMole     int array storing the moles of the first compound before the DD reaction
+     * @param secondMole    int array storing the moles of the second compound before the DD reaction
+     */
+    public static void arrangeMoles(int[] firstMole, int[] secondMole) {
+        int temp;    // a temporary string
+
+        // iritate accross each index and multiply the amount by the amount at the first index
+        for (int i = 1; i < 3; i++) {
+            firstMole[i] = firstMole[i]*firstMole[0];
+            secondMole[i] = secondMole[i]*secondMole[0];
+        }
+
+        // switching the amounts of the anions
+        temp = firstMole[2];
+        firstMole[2] = secondMole[2];
+        secondMole[2] = temp;
+    }
+    /**
      * Description: Method to scan the percipitate chart and check if a reaction occurs in a 
      *              word equation.
      * @author Ian & William
-     * @param reaction
-     * @param arrOne
-     * @param arrTwo
-     * @throws FileNotFoundException
+     * @param reaction      boolean array to indicate if a reaction occurs or not
+     * @param arrOne        string array of the first compound inputted by the user
+     * @param arrTwo        string array of the second compound inputted by the user
+     * @throws FileNotFoundException    outputs error the the file is not found in the same folder
      */
     public static void checkPercipitate(boolean[] reaction, String[] arrOne, String[] arrTwo) throws FileNotFoundException{
         // The path to the csv file may vary
@@ -224,58 +264,19 @@ class FinalSummative {
         }
     }
     /**
-     * Description: scans the sales.csv file
+     * Description: Scan the csv and grab charges
      * 
      * @author William Wu
-     * @param path the string that stores the path to each csv file needed to scan
-     * @throws FileNotFoundException if the file is not found exception has occured when scanning the file
+     * @param compoundOne   the array containing the first compound in the chemical equation
+     * @param compoundTwo   the array containing the second compound in the chemical equation
+     * @param newFirstMole  int array storing the charges of the first compound after the DD reaction
+     * @param newSecondMole int array storing the charges of the seond compound after the DD reaction
+     * @throws FileNotFoundException    outputs error the the file is not found in the same folder
      */
-    public static void readFile(String path) throws FileNotFoundException{
+    public static void scanCharges(String[] compoundOne, String[] compoundTwo, int[] newFirstMole,
+    int[] newSecondMole) throws FileNotFoundException{
         // need path
-        //Parsing a csv file into BufferedReader class constructor
-        BufferedReader br = new BufferedReader(new FileReader(path));
-
-        // Variable line that equals to nothing right now
-        String line = "";
-
-        // Try, catch, and finally statement are for if the code goes wrong
-        // Try block goes first 
-        try{
-            // A while loop that infinantly go over the file and read each line unitl it is empty
-            while((line = br.readLine()) != null){
-                // A string array that seperates the different infos by the comma in the file
-                String[] value = line.split(",");
-            }
-        }
-        // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
-        catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        // Finally block that will be executed in every case, success or caught exception
-        finally{
-            // Close the bufferscanner if all lines in the file is read
-            if(br != null){
-                try{
-                    br.close();
-                }
-                catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-     /**
-     * Description: scans the charges.csv file
-     * 
-     * @author William Wu
-     * @param path the string that stores the path to each csv file needed to scan
-     * @throws FileNotFoundException if the file is not found exception has occured when scanning the file
-     */
-    public static void scanCharges(String path) throws FileNotFoundException{
-       // need path
+        String path = "charges.csv";
 
         //Parsing a csv file into BufferedReader class constructor
         BufferedReader br = new BufferedReader(new FileReader(path));
@@ -290,6 +291,23 @@ class FinalSummative {
             while((line = br.readLine()) != null){
                 // A string array that seperates the different infos by the comma in the file
                 String[] value = line.split(",");
+
+                // if the cation from the first compound is found
+                if (value[0].indexOf(compoundOne[0]) > -1) {
+                    newFirstMole[2] = Integer.parseInt(value[0]);   // store the charge
+                }
+                // if the cation from the second compound is found
+                else if (value[0].indexOf(compoundTwo[0]) > -1) {
+                    newSecondMole[2] = Integer.parseInt(value[0]);  // store the charge
+                }
+                // if the anion from the second compound is found
+                else if (value[0].indexOf(compoundTwo[1]) > -1) {
+                    newFirstMole[1] = Integer.parseInt(value[0]);   // store the charge
+                }
+                // if the anion from the first compound is found
+                else if (value[0].indexOf(compoundOne[1]) > -1) {
+                    newSecondMole[1] = Integer.parseInt(value[0]);  // store the charge
+                }
             }
         }
         // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
