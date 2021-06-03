@@ -30,6 +30,8 @@ class FinalSummative {
         int[] secondMole = {1, 1, 1};
         int[] newFirstMole = {1, 1, 1};
         int[] newSecondMole = {1, 1, 1};
+        String[] stringmoleOne = {"", "", ""};
+        String[] stringMoleTwo = {"", "", ""};
 
 
         // Condition: if the user inputs a chemical equation
@@ -66,8 +68,8 @@ class FinalSummative {
             balance(firstMole, secondMole, newFirstMole, newSecondMole);
 
             // call removeSingularIons method
-            removeSingularIons(newFirstMole);
-            removeSingularIons(newSecondMole);
+            removeSingularIons(newFirstMole, stringmoleOne);
+            removeSingularIons(newSecondMole, stringMoleTwo);
 
             // call addBrackets method
             addBrackets(compoundOne, compoundTwo, newFirstMole, newSecondMole);
@@ -82,7 +84,9 @@ class FinalSummative {
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+        compoundOneField.getText()
+        String newCompoundOne =  compoundOne[0] + stringmoleOne[1] + " " + compoundTwo[1] + stringmoleOne[2] + " ";
+        String newCompoundTwo =  " " + compoundTwo[0] + stringMoleTwo[1] + " " + compoundOne[1] + stringMoleTwo[2];
 
         // display the product after a reaction occurs
         if (reaction[0] == true) { 
@@ -110,12 +114,16 @@ class FinalSummative {
      * 
      * @author Ian      
      * @param moles     the int array storing the amount of each ion in the compound after reaction
+     * @param stringmoleOne     string array of the amount of each ion in the compound after reaction
      */
-    public static void removeSingularIons(int[] moles) {
-        // iterating the array to check if it equals to 1
-        for (int i = 0; i < 3; i++) {
+    public static void removeSingularIons(int[] moles, String[] stringMole) {
+        // store the amount to a string array
+        for (int i = 0; i < moles.length; i++) {
+            stringMole[i] = Integer.toString(moles[i]);
+
+            // iterating the array to check if it equals to 1
             if (moles[i] == 1) {
-                moles[i] = Integer.parseInt("");    // make the array blank
+                stringMole[i] = "";     // make it empty
             }
         }
     }
@@ -130,11 +138,11 @@ class FinalSummative {
      */
     public static void addBrackets(String[] compoundOne, String[] compoundTwo, int[] newFirstMole, int[] newSecondMole) {
         // if the polyatomic ion is more than 1 in the reaction
-        if (Integer.toString(newFirstMole[2]).matches("-?\\d+") && Character.toString(compoundTwo[1].charAt(compoundTwo[1].length()) ).matches("-?\\d+")) {
+        if (newFirstMole[2] != 1 && Character.toString(compoundTwo[1].charAt(compoundTwo[1].length()) ).matches("-?\\d+")) {
             compoundTwo[1] = "(" + compoundTwo[1] + ")";    // add brackets
         }
         // if the polyatomic ion in the second compound is more than 1 in the reaction
-        if (Integer.toString(newSecondMole[2]).matches("-?\\d+") && Character.toString(compoundOne[1].charAt(compoundOne[1].length()) ).matches("-?\\d+")) {
+        if (newSecondMole[2] != 1 && Character.toString(compoundOne[1].charAt(compoundOne[1].length()) ).matches("-?\\d+")) {
             compoundOne[1] = "(" + compoundOne[1] + ")";    // add brackets
         }
     }
@@ -246,16 +254,19 @@ class FinalSummative {
      * @param moles    the int array for storing the amount of each ion in the compound
      */
     public static void anionAmount(String[] compound, int[] moles) {
-        // if the anion is multiple
-        if (Character.toString(compound[1].charAt(compound[1].length()-1)).matches("-?\\d+")) {
-            // store the amount
-            moles[2] = Character.getNumericValue(compound[1].charAt(compound[1].length()-1));
-            compound[1] = compound[1].substring(0, compound[1].length()-1);     // remove the integer
-        }
+        // if the anion isn't polyatomic or is hydroxide
+        if (Character.isUpperCase(compound[1].charAt(1)) == false || compound[1].indexOf("OH") > -1) {
+            // if the anion is multiple
+            if (Character.toString(compound[1].charAt(compound[1].length()-1)).matches("-?\\d+")) {
+                // store the amount
+                moles[2] = Character.getNumericValue(compound[1].charAt(compound[1].length()-1));
+                compound[1] = compound[1].substring(0, compound[1].length()-1);     // remove the integer
+            }
 
-        // store the polyatomic ion and remove the brakets
-        if (Character.toString(compound[1].charAt(0)).equals("(")) {
-            compound[1] = compound[1].substring(1, compound[1].length()-1);
+            // store the polyatomic ion and remove the brakets
+            if (Character.toString(compound[1].charAt(0)).equals("(")) {
+                compound[1] = compound[1].substring(1, compound[1].length()-1);
+            }
         }
     }
     /**
