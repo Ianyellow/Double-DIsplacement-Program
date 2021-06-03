@@ -216,7 +216,7 @@ public class App extends Application {
         // display the product after a reaction occurs
         if (reaction[0] == true) { 
             showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Calculate Successful!", 
-            compoundOneField.getText() + " + " + compoundTwoField.getText() " -->  " + newCompoundOne + newCompoundTwo);
+            compoundOneField.getText() + " + " + compoundTwoField.getText() + " -->  " + newCompoundOne + newCompoundTwo);
         }
         // display no reaction if a reaction doesn't occur
         else {
