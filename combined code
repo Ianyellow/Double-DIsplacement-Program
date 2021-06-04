@@ -153,12 +153,23 @@ public class App extends Application {
                     showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "Second Compound is empty. Please enter a valid compound");
                     return;
                 }
-
+                
+                String compoundOneTest = compoundOneField.getText();
+                String compoundTwoTest = compoundOneField.getText();
                 String[] compoundOne = compoundOneField.getText().split(" ");
                 String[] compoundTwo = compoundTwoField.getText().split(" ");
                 boolean[] reaction = {false};
                 boolean[] foundIon = {false, false, false, false};
                 int accum = 0;
+                
+                if(containsWhiteSpace(compoundOneTest) == false){
+                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "First Compound is invalid, please add a space between two elements, e.g. Na2 SO4");
+                    return;
+                }
+                if(containsWhiteSpace(compoundTwoTest) == false){
+                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "Second Compound is invalid, please add a space between two elements, e.g. Na2 SO4");
+                    return;
+                }
 
                 // indentify if the user inputs a chemical or word equation
                 for (int i = 0; i < compoundOne.length; i ++) {
@@ -564,4 +575,22 @@ public class App extends Application {
             }
         }
     }
+    /**@Description: Determine if the compounds that the user inputs have a space between two elements. 
+     * @author Leo Shi
+     * @param line
+     * @return
+     */
+    public static boolean containsWhiteSpace(String line){
+        boolean space= false; 
+        if(line != null){
+            // if there is space inside, return true
+            for(int i = 0; i < line.length(); i++){
+    
+                if(line.charAt(i) == ' '){
+                space= true;
+                }
+    
+            }
+        }
+        return space;
 }
