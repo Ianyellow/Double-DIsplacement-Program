@@ -202,11 +202,6 @@ public class App extends Application {
         // call typoValidate method
         typoValidate(foundIon);
 
-        // if the user inputs an unrecognized ion
-        if (foundIon[0] == false) {
-            showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Cannot recognize input!", "Please reinput again");
-        }
-
         // Condition: if the user inputs a chemical equation
         if (accum < 5) {
             // call reduceCharges method
@@ -240,8 +235,12 @@ public class App extends Application {
         String newCompoundOne =  compoundOne[0] + stringMoleOne[1] + " " + compoundTwo[1] + stringMoleOne[2];
         String newCompoundTwo =  " + " + compoundTwo[0] + stringMoleTwo[1] + " " + compoundOne[1] + stringMoleTwo[2];
 
+        // if the user inputs an unrecognized ion
+        if (foundIon[0] == false) {
+            showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Cannot recognize input!", "Please reinput again");
+        }
         // display the product after a reaction occurs
-        if (reaction[0] == true) { 
+        else if (reaction[0] == true) { 
             showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Calculate Successful!", compoundOneField.getText() + " + " + compoundTwoField.getText() + "  -->  " + newCompoundOne + newCompoundTwo);
         }
         // display no reaction if a reaction doesn't occur
@@ -538,10 +537,19 @@ public class App extends Application {
                 }
 
                 // validate if the ions the user inputs a correct ion name/formula
-                foundIon[0] = value[0].contains(compoundOne[0]);
-                foundIon[1] = value[0].contains(compoundOne[1]);
-                foundIon[2] = value[0].contains(compoundTwo[0]);
-                foundIon[3] = value[0].contains(compoundTwo[1]);
+                // validate if the ions the user inputs a correct ion name/formula
+                if (foundIon[0] == false) {
+                    foundIon[0] = value[0].contains(compoundOne[0]);
+                }
+                if (foundIon[1] == false) {
+                    foundIon[1] = value[0].contains(compoundOne[1]);
+                }
+                if (foundIon[2] == false) {
+                    foundIon[2] = value[0].contains(compoundTwo[0]);
+                }
+                if (foundIon[3] == false) {
+                    foundIon[3] = value[0].contains(compoundTwo[1]);
+                }
             }
         }
         // The two catch files are for if the file is not found from the file path, they will print the files' stack trace

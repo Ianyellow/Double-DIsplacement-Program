@@ -63,7 +63,7 @@ class FinalSummative {
         typoValidate(foundIon);
 
         if (foundIon[0] == false) {
-            
+            // output user input error
         }
         
         // Condition: if the user inputs a chemical equation
@@ -376,10 +376,19 @@ class FinalSummative {
                     }
                 }
 
-                foundIon[0] = value[0].contains(compoundOne[0]);
-                foundIon[1] = value[0].contains(compoundOne[1]);
-                foundIon[2] = value[0].contains(compoundTwo[0]);
-                foundIon[3] = value[0].contains(compoundTwo[1]);
+                // validate if the ions the user inputs a correct ion name/formula
+                if (foundIon[0] == false) {
+                    foundIon[0] = value[0].contains(compoundOne[0]);
+                }
+                if (foundIon[1] == false) {
+                    foundIon[1] = value[0].contains(compoundOne[1]);
+                }
+                if (foundIon[2] == false) {
+                    foundIon[2] = value[0].contains(compoundTwo[0]);
+                }
+                if (foundIon[3] == false) {
+                    foundIon[3] = value[0].contains(compoundTwo[1]);
+                }
                 
             }
         }
