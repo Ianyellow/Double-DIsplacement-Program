@@ -13,7 +13,8 @@ import java.io.IOException;
 class FinalSummative {
     public static void main(String [] args) {
 
-        boolean reaction[] = {false};
+        boolean[] reaction = {false};
+        boolean[] foundIon = {false, false, false, false};
         int accum = 0;
 
         // indentify if the user inputs a chemical or word equation
@@ -47,16 +48,26 @@ class FinalSummative {
             // call anionAmount method
             anionAmount(compoundOne, firstMole);
             anionAmount(compoundTwo, secondMole);
+        }
 
-            try {
-                // call scanCharges method
-                scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole);
-            }
-            // catch file not found error when reading the method
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        try {
+            // call scanCharges method
+            scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole, foundIon);
+        }
+        // catch file not found error when reading the method
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        // call typoValidate method
+        typoValidate(foundIon);
+
+        if (foundIon[0] == false) {
+            
+        }
+        
+        // Condition: if the user inputs a chemical equation
+        if (accum < 5) {
             // call reduceCharges method
             reduceCharges(newFirstMole);
             reduceCharges(newSecondMole);
@@ -84,7 +95,7 @@ class FinalSummative {
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        compoundOneField.getText()
+
         String newCompoundOne =  compoundOne[0] + stringmoleOne[1] + " " + compoundTwo[1] + stringmoleOne[2] + " ";
         String newCompoundTwo =  " " + compoundTwo[0] + stringMoleTwo[1] + " " + compoundOne[1] + stringMoleTwo[2];
 
@@ -95,6 +106,21 @@ class FinalSummative {
         // display no reaction if a reaction doesn't occur
         else {
             display.setText("--> no reaction");
+        }
+    }
+    /**
+     * @Description: check if all ions are correctly typed / inputted
+     * 
+     * @author Ian
+     * @param foundIon
+     */
+    public static void typoValidate(boolean[] foundIon) {
+        // detect if an ion exists
+        for (boolean b : foundIon) {
+            // if there's one ion that doesn't exists
+            if (b == false) {
+                foundIon[0] = false;    // make the first index false
+            }
         }
     }
     /**
@@ -311,7 +337,7 @@ class FinalSummative {
      * @throws FileNotFoundException    outputs error the the file is not found in the same folder
      */
     public static void scanCharges(String[] compoundOne, String[] compoundTwo, int[] newFirstMole,
-    int[] newSecondMole) throws FileNotFoundException{
+    int[] newSecondMole, boolean[] foundIon) throws FileNotFoundException{
         // need path
         String path = "charges.csv";
 
@@ -320,6 +346,7 @@ class FinalSummative {
 
         // Variable line that equals to nothing right now
         String line = "";
+        int accum = 0;
 
         // Try, catch, and finally statement are for if the code goes wrong
         // Try block goes first 
@@ -328,23 +355,32 @@ class FinalSummative {
             while((line = br.readLine()) != null){
                 // A string array that seperates the different infos by the comma in the file
                 String[] value = line.split(",");
+                accum++;
 
-                // if the cation from the first compound is found
-                if (value[0].indexOf(compoundOne[0]) > -1) {
-                    newFirstMole[2] = Integer.parseInt(value[0]);   // store the charge
+                if (accum <= 58) {
+                    // if the cation from the first compound is found
+                    if (value[0].indexOf(compoundOne[0]) > -1) {
+                        newFirstMole[2] = Integer.parseInt(value[1]);   // store the charge
+                    }
+                    // if the cation from the second compound is found
+                    else if (value[0].indexOf(compoundTwo[0]) > -1) {
+                        newSecondMole[2] = Integer.parseInt(value[1]);  // store the charge
+                    }
+                    // if the anion from the second compound is found
+                    else if (value[0].indexOf(compoundTwo[1]) > -1) {
+                        newFirstMole[1] = Integer.parseInt(value[1]);   // store the charge
+                    }
+                    // if the anion from the first compound is found
+                    else if (value[0].indexOf(compoundOne[1]) > -1) {
+                        newSecondMole[1] = Integer.parseInt(value[1]);  // store the charge
+                    }
                 }
-                // if the cation from the second compound is found
-                else if (value[0].indexOf(compoundTwo[0]) > -1) {
-                    newSecondMole[2] = Integer.parseInt(value[0]);  // store the charge
-                }
-                // if the anion from the second compound is found
-                else if (value[0].indexOf(compoundTwo[1]) > -1) {
-                    newFirstMole[1] = Integer.parseInt(value[0]);   // store the charge
-                }
-                // if the anion from the first compound is found
-                else if (value[0].indexOf(compoundOne[1]) > -1) {
-                    newSecondMole[1] = Integer.parseInt(value[0]);  // store the charge
-                }
+
+                foundIon[0] = value[0].contains(compoundOne[0]);
+                foundIon[1] = value[0].contains(compoundOne[1]);
+                foundIon[2] = value[0].contains(compoundTwo[0]);
+                foundIon[3] = value[0].contains(compoundTwo[1]);
+                
             }
         }
         // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
