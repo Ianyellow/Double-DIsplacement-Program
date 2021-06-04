@@ -162,9 +162,9 @@ public class App extends Application {
                 String compoundTwoTest = compoundTwoField.getText();
                 String[] compoundOne = compoundOneField.getText().split(" ");
                 String[] compoundTwo = compoundTwoField.getText().split(" ");
-                boolean[] reaction = {false};
-                boolean[] foundIon = {false, false, false, false, true};
-                int accum = 0;
+                boolean[] reaction = {false};   // boolean to detect for reaction
+                boolean[] foundIon = {false, false, false, false, true};    // boolean for input validation
+                int accum = 0;      // accumulator to count lower case letters
                 
                 if(containsWhiteSpace(compoundOneTest) == false){
                     showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Error!", "First Compound is invalid, please add a space between two elements, e.g. Na2 SO4");
@@ -177,17 +177,21 @@ public class App extends Application {
 
                 // indentify if the user inputs a chemical or word equation
                 for (int i = 0; i < compoundOneTest.length(); i ++) {
+                    // if the character is a lower case
                     if (Character.isLowerCase(compoundOneTest.charAt(i)) == true) {
-                        accum++;
+                        accum++;        // accumulating the integer
                     }
                 }
 
+                // declaring all necessary variables
+                // set all amounts at 1 for now
                 int[] firstMole = {1, 1, 1};
                 int[] secondMole = {1, 1, 1};
                 int[] newFirstMole = {1, 1, 1};
                 int[] newSecondMole = {1, 1, 1};
-                String[] stringMoleOne = {"", "", ""};
-                String[] stringMoleTwo = {"", "", ""};
+
+                String[] stringMoleOne = {"", "", ""};      // empty strings for now
+                String[] stringMoleTwo = {"", "", ""};      // empty strings for now
 
                 identifyFirstNum(compoundOne, firstMole);
 
@@ -248,6 +252,7 @@ public class App extends Application {
             E.printStackTrace();
         }
 
+        // condense the compounds to one singular string to be outputted
         String newCompoundOne =  compoundOne[0] + stringMoleOne[1] + " " + compoundTwo[1] + stringMoleOne[2];
         String newCompoundTwo =  " + " + compoundTwo[0] + stringMoleTwo[1] + " " + compoundOne[1] + stringMoleTwo[2];
 
@@ -283,7 +288,7 @@ public class App extends Application {
             alert.initOwner(owner);
             alert.show();
         }
-        /**
+    /**
      * @Description: Balance the chemical equation
      * 
      * @author Ian
@@ -294,6 +299,7 @@ public class App extends Application {
      */
     public static void balance(int[] firstMole, int[] secondMole, int[] newFirstMole, int[] newSecondMole) {
         // Do something to balance the chemical equation
+        // too complicated for the 3 of us 
     }
     /**
      * @Description: remove moles that have an anount of 1, we don't show it as an output
@@ -341,7 +347,7 @@ public class App extends Application {
      * @param secondMole    int array storing the moles of the second compound before the DD reaction
      */
     public static void arrangeMoles(int[] firstMole, int[] secondMole) {
-        int temp;    // a temporary string
+        int temp;    // a temporary integer
 
         // iterate accross each index and multiply the amount by the amount at the first index
         for (int i = 1; i < 3; i++) {
@@ -365,9 +371,6 @@ public class App extends Application {
      */
     public static void checkPercipitate(boolean[] reaction, String[] arrOne, String[] arrTwo) throws FileNotFoundException{
         // The path to the csv file may vary
-
-        //    LEO, YOU WILL NEED TO DOWNLOAD THE FILE IN THE SAME FOLDER OF THE JAVA PROJECT
-        //              FOR EXAMPLE :   src\\solubility.csv
         String path = "C:/Users/dunyu/Desktop/solubility - Sheet1.csv";
         
         //Parsing a csv file into BufferedReader class constructor
@@ -424,10 +427,12 @@ public class App extends Application {
      * @param mole    the int array containing charges from the csv file
      */
     public static void reduceCharges(int[] mole) {
+        // iterate and divide charges if possible
         for (int i = 2; i < 5; i++) {
+            // if both are divisible by 2 or 3
             if ((mole[1]%i == 0 ) && (mole[2]%i == 0)) {
-                mole[1] = mole[1]/i;
-                mole[2] = mole[2]/i;
+                mole[1] = mole[1]/i;    // deviding both by the common number
+                mole[2] = mole[2]/i;    // deviding both by the common number
             }
         }
     }
@@ -446,7 +451,7 @@ public class App extends Application {
             compound[1] = compound[1].substring(1, compound[1].length()-2);
         }
 
-        // if the anion isn't polyatomic or is hydroxide
+        // if the anion has at least two letters and isn't polyatomic or is hydroxide
         if (compound[1].length() > 1 && Character.isUpperCase(compound[1].charAt(1)) == false || compound[1].indexOf("OH") > -1) {
             // if the anion is multiple
             if (Character.toString(compound[1].charAt(compound[1].length()-1)).matches("-?\\d+")) {
@@ -524,7 +529,7 @@ public class App extends Application {
 
         // Variable line that equals to nothing right now
         String line = "";
-        int accum = 0;
+        int accum = 0;      // accumulator to find the row number
 
         // Try, catch, and finally statement are for if the code goes wrong
         // Try block goes first 
@@ -533,23 +538,24 @@ public class App extends Application {
             while((line = br.readLine()) != null){
                 // A string array that seperates the different infos by the comma in the file
                 String[] value = line.split(",");
-                accum++;
+                accum++;    // accumulating the row number
 
                 // if the row arrives at 59 where the charges end, stop storing charges
+                // this is for the chemical equations
                 if (accum <= 59 && wordOrChemical < 5) {
-                    // if the cation from the first compound is found
+                    // if the cation from the first compound is found and has the same length
                     if (value[0].indexOf(compoundOne[0]) > -1  && value[0].length() == compoundOne[0].length()) {
                         newFirstMole[2] = Integer.parseInt(value[1]);   // store the charge
                     }
-                    // if the cation from the second compound is found
+                    // if the cation from the second compound is found and has the same length
                     else if (value[0].indexOf(compoundTwo[0]) > -1  && value[0].length() == compoundTwo[0].length()) {
                         newSecondMole[2] = Integer.parseInt(value[1]);  // store the charge
                     }
-                    // if the anion from the second compound is found
+                    // if the anion from the second compound is found and has the same length
                     else if (value[0].indexOf(compoundTwo[1]) > -1  && value[0].length() == compoundTwo[1].length()) {
                         newFirstMole[1] = Integer.parseInt(value[1]);   // store the charge
                     }
-                    // if the anion from the first compound is found
+                    // if the anion from the first compound is found and has the same length
                     else if (value[0].indexOf(compoundOne[1]) > -1  && value[0].length() == compoundOne[1].length()) {
                         newSecondMole[1] = Integer.parseInt(value[1]);  // store the charge
                     }
@@ -569,6 +575,8 @@ public class App extends Application {
                     }
                 }
 
+                // this is the input validation for word equations
+                // start validating at row 60
                 if (wordOrChemical > 5 && accum > 59) {
                     // validate if the ions the user inputs a correct ion name/formula
                     if (foundIon[0] == false && value[0].length() == compoundOne[0].length()) {
@@ -609,7 +617,7 @@ public class App extends Application {
     /**@Description: Determine if the compounds that the user inputs have a space between two elements. 
      * @author Leo Shi
      * @param line
-     * @return
+     * @return space 
      */
     public static boolean containsWhiteSpace(String line){
         boolean space= false; 
