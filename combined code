@@ -1,3 +1,9 @@
+/*
+* Date: May  20, 2021
+* Name: Ian, William, Leo
+* Teacher: Mr. Ho
+* Description: A program that finds the double displacement reaction of compounds, given a chemical or word equation
+**/
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,9 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-/**
- * @author Leo Shi
- */
+
 public class App extends Application {
 
     public static void main(String[] args) {
