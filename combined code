@@ -443,7 +443,7 @@ public class App extends Application {
         }
 
         // if the anion isn't polyatomic or is hydroxide
-        if (Character.isUpperCase(compound[1].charAt(1)) == false || compound[1].indexOf("OH") > -1) {
+        if (compound[1].length() > 1 && Character.isUpperCase(compound[1].charAt(1)) == false || compound[1].indexOf("OH") > -1) {
             // if the anion is multiple
             if (Character.toString(compound[1].charAt(compound[1].length()-1)).matches("-?\\d+")) {
                 // store the amount
@@ -531,52 +531,52 @@ public class App extends Application {
                 String[] value = line.split(",");
                 accum++;
 
-                // if the row arrives at 58 where the charges end, stop storing charges
-                if (accum <= 58 && wordOrChemical < 5) {
+                // if the row arrives at 59 where the charges end, stop storing charges
+                if (accum <= 59 && wordOrChemical < 5) {
                     // if the cation from the first compound is found
-                    if (value[0].indexOf(compoundOne[0]) > -1) {
+                    if (value[0].indexOf(compoundOne[0]) > -1  && value[0].length() == compoundOne[0].length()) {
                         newFirstMole[2] = Integer.parseInt(value[1]);   // store the charge
                     }
                     // if the cation from the second compound is found
-                    else if (value[0].indexOf(compoundTwo[0]) > -1) {
+                    else if (value[0].indexOf(compoundTwo[0]) > -1  && value[0].length() == compoundTwo[0].length()) {
                         newSecondMole[2] = Integer.parseInt(value[1]);  // store the charge
                     }
                     // if the anion from the second compound is found
-                    else if (value[0].indexOf(compoundTwo[1]) > -1) {
+                    else if (value[0].indexOf(compoundTwo[1]) > -1  && value[0].length() == compoundTwo[1].length()) {
                         newFirstMole[1] = Integer.parseInt(value[1]);   // store the charge
                     }
                     // if the anion from the first compound is found
-                    else if (value[0].indexOf(compoundOne[1]) > -1) {
+                    else if (value[0].indexOf(compoundOne[1]) > -1  && value[0].length() == compoundOne[1].length()) {
                         newSecondMole[1] = Integer.parseInt(value[1]);  // store the charge
                     }
 
                     // validate if the ions the user inputs a correct ion name/formula
-                    if (foundIon[0] == false) {
+                    if (foundIon[0] == false && value[0].length() == compoundOne[0].length()) {
                         foundIon[0] = value[0].contains(compoundOne[0]);
                     }
-                    if (foundIon[1] == false) {
+                    if (foundIon[1] == false  && value[0].length() == compoundOne[1].length()) {
                         foundIon[1] = value[0].contains(compoundOne[1]);
                     }
-                    if (foundIon[2] == false) {
+                    if (foundIon[2] == false  && value[0].length() == compoundTwo[0].length()) {
                         foundIon[2] = value[0].contains(compoundTwo[0]);
                     }
-                    if (foundIon[3] == false) {
+                    if (foundIon[3] == false  && value[0].length() == compoundTwo[1].length()) {
                         foundIon[3] = value[0].contains(compoundTwo[1]);
                     }
                 }
 
-                if (wordOrChemical > 5 && accum > 58) {
+                if (wordOrChemical > 5 && accum > 59) {
                     // validate if the ions the user inputs a correct ion name/formula
-                    if (foundIon[0] == false) {
+                    if (foundIon[0] == false && value[0].length() == compoundOne[0].length()) {
                         foundIon[0] = value[0].contains(compoundOne[0]);
                     }
-                    if (foundIon[1] == false) {
+                    if (foundIon[1] == false  && value[0].length() == compoundOne[1].length()) {
                         foundIon[1] = value[0].contains(compoundOne[1]);
                     }
-                    if (foundIon[2] == false) {
+                    if (foundIon[2] == false  && value[0].length() == compoundTwo[0].length()) {
                         foundIon[2] = value[0].contains(compoundTwo[0]);
                     }
-                    if (foundIon[3] == false) {
+                    if (foundIon[3] == false  && value[0].length() == compoundTwo[1].length()) {
                         foundIon[3] = value[0].contains(compoundTwo[1]);
                     }
                 }
