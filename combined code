@@ -155,7 +155,7 @@ public class App extends Application {
                 }
                 
                 String compoundOneTest = compoundOneField.getText();
-                String compoundTwoTest = compoundOneField.getText();
+                String compoundTwoTest = compoundTwoField.getText();
                 String[] compoundOne = compoundOneField.getText().split(" ");
                 String[] compoundTwo = compoundTwoField.getText().split(" ");
                 boolean[] reaction = {false};
