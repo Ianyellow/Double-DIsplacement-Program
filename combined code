@@ -159,7 +159,7 @@ public class App extends Application {
                 String[] compoundOne = compoundOneField.getText().split(" ");
                 String[] compoundTwo = compoundTwoField.getText().split(" ");
                 boolean[] reaction = {false};
-                boolean[] foundIon = {false, false, false, false};
+                boolean[] foundIon = {false, false, false, false, true};
                 int accum = 0;
                 
                 if(containsWhiteSpace(compoundOneTest) == false){
@@ -172,17 +172,18 @@ public class App extends Application {
                 }
 
                 // indentify if the user inputs a chemical or word equation
-                for (int i = 0; i < compoundOne.length; i ++) {
-                    if (Character.isLowerCase(compoundOne.length) == true) {
+                for (int i = 0; i < compoundOneTest.length(); i ++) {
+                    if (Character.isLowerCase(compoundOneTest.charAt(i)) == true) {
                         accum++;
                     }
                 }
+
                 int[] firstMole = {1, 1, 1};
                 int[] secondMole = {1, 1, 1};
                 int[] newFirstMole = {1, 1, 1};
                 int[] newSecondMole = {1, 1, 1};
-                String[] stringMoleOne = new String[3];
-                String[] stringMoleTwo = new String[3];
+                String[] stringMoleOne = {"", "", ""};
+                String[] stringMoleTwo = {"", "", ""};
 
                 identifyFirstNum(compoundOne, firstMole);
 
@@ -203,7 +204,7 @@ public class App extends Application {
 
         try {
             // call scanCharges method
-            scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole, foundIon);
+            scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole, foundIon, accum);
         }
         // catch file not found error when reading the method
         catch (FileNotFoundException E) {
@@ -247,7 +248,7 @@ public class App extends Application {
         String newCompoundTwo =  " + " + compoundTwo[0] + stringMoleTwo[1] + " " + compoundOne[1] + stringMoleTwo[2];
 
         // if the user inputs an unrecognized ion
-        if (foundIon[0] == false) {
+        if (foundIon[4] == false) {
             showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Cannot recognize input!", "Please reinput again");
         }
         // display the product after a reaction occurs
@@ -488,10 +489,10 @@ public class App extends Application {
      */
     public static void typoValidate(boolean[] foundIon) {
         // detect if an ion exists
-        for (boolean b : foundIon) {
+        for (int i = 0; i < 4; i++) {
             // if there's one ion that doesn't exist
-            if (b == false) {
-                foundIon[0] = false;    // make the first index false
+            if (foundIon[i] == false) {
+                foundIon[4] = false; // make the forth index false
             }
         }
     }
@@ -504,10 +505,11 @@ public class App extends Application {
      * @param newFirstMole  int array storing the charges of the first compound after the DD reaction
      * @param newSecondMole int array storing the charges of the seond compound after the DD reaction
      * @param foundIon      boolean array indicating if an ion is found
+     * @param wordOrChemical      int holding the number of lower cases in the compounds
      * @throws FileNotFoundException    outputs error the the file is not found in the same folder
      */
     public static void scanCharges(String[] compoundOne, String[] compoundTwo, int[] newFirstMole,
-    int[] newSecondMole, boolean[] foundIon) throws FileNotFoundException{ 
+    int[] newSecondMole, boolean[] foundIon, int wordOrChemical) throws FileNotFoundException{ 
         // need path
         String path = "C:/Users/dunyu/Desktop/charges - Sheet1.csv";
 
@@ -547,19 +549,36 @@ public class App extends Application {
                     }
                 }
 
-                // validate if the ions the user inputs a correct ion name/formula
-                // validate if the ions the user inputs a correct ion name/formula
-                if (foundIon[0] == false) {
-                    foundIon[0] = value[0].contains(compoundOne[0]);
+                if (wordOrChemical > 5 && accum > 58) {
+                    // validate if the ions the user inputs a correct ion name/formula
+                    if (foundIon[0] == false) {
+                        foundIon[0] = value[0].contains(compoundOne[0]);
+                    }
+                    if (foundIon[1] == false) {
+                        foundIon[1] = value[0].contains(compoundOne[1]);
+                    }
+                    if (foundIon[2] == false) {
+                        foundIon[2] = value[0].contains(compoundTwo[0]);
+                    }
+                    if (foundIon[3] == false) {
+                        foundIon[3] = value[0].contains(compoundTwo[1]);
+                    }
                 }
-                if (foundIon[1] == false) {
-                    foundIon[1] = value[0].contains(compoundOne[1]);
-                }
-                if (foundIon[2] == false) {
-                    foundIon[2] = value[0].contains(compoundTwo[0]);
-                }
-                if (foundIon[3] == false) {
-                    foundIon[3] = value[0].contains(compoundTwo[1]);
+
+                if (wordOrChemical < 5 && accum <= 58) {
+                    // validate if the ions the user inputs a correct ion name/formula
+                    if (foundIon[0] == false) {
+                        foundIon[0] = value[0].contains(compoundOne[0]);
+                    }
+                    if (foundIon[1] == false) {
+                        foundIon[1] = value[0].contains(compoundOne[1]);
+                    }
+                    if (foundIon[2] == false) {
+                        foundIon[2] = value[0].contains(compoundTwo[0]);
+                    }
+                    if (foundIon[3] == false) {
+                        foundIon[3] = value[0].contains(compoundTwo[1]);
+                    }
                 }
             }
         }
@@ -601,4 +620,5 @@ public class App extends Application {
             }
         }
         return space;
+    }
 }
