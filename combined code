@@ -156,7 +156,8 @@ public class App extends Application {
 
                 String[] compoundOne = compoundOneField.getText().split(" ");
                 String[] compoundTwo = compoundTwoField.getText().split(" ");
-                boolean reaction[] = {false};
+                boolean[] reaction = {false};
+                boolean[] foundIon = {false, false, false, false};
                 int accum = 0;
 
                 // indentify if the user inputs a chemical or word equation
@@ -187,16 +188,27 @@ public class App extends Application {
             // call anionAmount method
             anionAmount(compoundOne, firstMole);
             anionAmount(compoundTwo, secondMole);
+        }
 
-            try {
-                // call scanCharges method
-                scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole);
-            }
-            // catch file not found error when reading the method
-            catch (FileNotFoundException E) {
-                E.printStackTrace();
-            }
+        try {
+            // call scanCharges method
+            scanCharges(compoundOne, compoundTwo, newFirstMole, newSecondMole, foundIon);
+        }
+        // catch file not found error when reading the method
+        catch (FileNotFoundException E) {
+            E.printStackTrace();
+        }
 
+        // call typoValidate method
+        typoValidate(foundIon);
+
+        // if the user inputs an unrecognized ion
+        if (foundIon[0] == false) {
+            showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Cannot recognize input!", "Please reinput again");
+        }
+
+        // Condition: if the user inputs a chemical equation
+        if (accum < 5) {
             // call reduceCharges method
             reduceCharges(newFirstMole);
             reduceCharges(newSecondMole);
@@ -459,17 +471,33 @@ public class App extends Application {
         }
     }
     /**
-     * @Description: Scan the csv and grab charges
+     * @Description: check if all ions are correctly typed / inputted
+     * 
+     * @author Ian
+     * @param foundIon  boolean array indicating if an ion is found
+     */
+    public static void typoValidate(boolean[] foundIon) {
+        // detect if an ion exists
+        for (boolean b : foundIon) {
+            // if there's one ion that doesn't exist
+            if (b == false) {
+                foundIon[0] = false;    // make the first index false
+            }
+        }
+    }
+    /**
+     * @Description: Scan the csv and grab charges. Validates user input for ions.
      * 
      * @author William Wu
      * @param compoundOne   the array containing the first compound in the chemical equation
      * @param compoundTwo   the array containing the second compound in the chemical equation
      * @param newFirstMole  int array storing the charges of the first compound after the DD reaction
      * @param newSecondMole int array storing the charges of the seond compound after the DD reaction
+     * @param foundIon      boolean array indicating if an ion is found
      * @throws FileNotFoundException    outputs error the the file is not found in the same folder
      */
     public static void scanCharges(String[] compoundOne, String[] compoundTwo, int[] newFirstMole,
-    int[] newSecondMole) throws FileNotFoundException{ 
+    int[] newSecondMole, boolean[] foundIon) throws FileNotFoundException{ 
         // need path
         String path = "C:/Users/dunyu/Desktop/charges - Sheet1.csv";
 
@@ -478,6 +506,7 @@ public class App extends Application {
 
         // Variable line that equals to nothing right now
         String line = "";
+        int accum = 0;
 
         // Try, catch, and finally statement are for if the code goes wrong
         // Try block goes first 
@@ -486,43 +515,33 @@ public class App extends Application {
             while((line = br.readLine()) != null){
                 // A string array that seperates the different infos by the comma in the file
                 String[] value = line.split(",");
+                accum++;
 
-                // if the cation from the first compound is found
-                if (value[0].indexOf(compoundOne[0]) > -1) {
-                    try{
-                        newFirstMole[2] = Integer.parseInt(value[1]);
+                // if the row arrives at 58 where the charges end, stop storing charges
+                if (accum <= 58) {
+                    // if the cation from the first compound is found
+                    if (value[0].indexOf(compoundOne[0]) > -1) {
+                        newFirstMole[2] = Integer.parseInt(value[1]);   // store the charge
                     }
-                    catch(NumberFormatException ex){
-                        System.err.println("Invalid string in argumment"); 
-                    }   // store the charge
-                }
-                // if the cation from the second compound is found
-                else if (value[0].indexOf(compoundTwo[0]) > -1) {
-                    try{
-                        newSecondMole[2] = Integer.parseInt(value[1]);
+                    // if the cation from the second compound is found
+                    else if (value[0].indexOf(compoundTwo[0]) > -1) {
+                        newSecondMole[2] = Integer.parseInt(value[1]);  // store the charge
                     }
-                    catch(NumberFormatException ex){
-                        System.err.println("Invalid string in argumment"); 
-                    }   // store the charge
-                }
-                // if the anion from the second compound is found
-                else if (value[0].indexOf(compoundTwo[1]) > -1) {
-                    try{
-                        newFirstMole[1] = Integer.parseInt(value[1]);  
+                    // if the anion from the second compound is found
+                    else if (value[0].indexOf(compoundTwo[1]) > -1) {
+                        newFirstMole[1] = Integer.parseInt(value[1]);   // store the charge
                     }
-                    catch(NumberFormatException ex){
-                        System.err.println("Invalid string in argumment"); 
-                    } // store the charge
-                }
-                // if the anion from the first compound is found
-                else if (value[0].indexOf(compoundOne[1]) > -1) {
-                    try{
-                        newSecondMole[1] = Integer.parseInt(value[1]);
+                    // if the anion from the first compound is found
+                    else if (value[0].indexOf(compoundOne[1]) > -1) {
+                        newSecondMole[1] = Integer.parseInt(value[1]);  // store the charge
                     }
-                    catch(NumberFormatException ex){
-                        System.err.println("Invalid string in argumment"); 
-                    } // store the charge
                 }
+
+                // validate if the ions the user inputs a correct ion name/formula
+                foundIon[0] = value[0].contains(compoundOne[0]);
+                foundIon[1] = value[0].contains(compoundOne[1]);
+                foundIon[2] = value[0].contains(compoundTwo[0]);
+                foundIon[3] = value[0].contains(compoundTwo[1]);
             }
         }
         // The two catch files are for if the file is not found from the file path, they will print the files' stack trace
