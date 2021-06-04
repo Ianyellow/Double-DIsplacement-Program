@@ -436,6 +436,12 @@ public class App extends Application {
      * @param moles    the int array for storing the amount of each ion in the compound
      */
     public static void anionAmount(String[] compound, int[] moles) {
+        // store the polyatomic ion and remove the brakets
+        if (Character.toString(compound[1].charAt(0)).equals("(")) {
+            moles[2] = Character.getNumericValue(compound[1].charAt(compound[1].length()-1));
+            compound[1] = compound[1].substring(1, compound[1].length()-2);
+        }
+
         // if the anion isn't polyatomic or is hydroxide
         if (Character.isUpperCase(compound[1].charAt(1)) == false || compound[1].indexOf("OH") > -1) {
             // if the anion is multiple
@@ -444,10 +450,6 @@ public class App extends Application {
                 moles[2] = Character.getNumericValue(compound[1].charAt(compound[1].length()-1));
                 compound[1] = compound[1].substring(0, compound[1].length()-1);     // remove the integer
             }
-        }
-        // store the polyatomic ion and remove the brakets
-        if (Character.toString(compound[1].charAt(0)).equals("(")) {
-            compound[1] = compound[1].substring(1, compound[1].length()-1);
         }
     }
     /**
@@ -547,9 +549,7 @@ public class App extends Application {
                     else if (value[0].indexOf(compoundOne[1]) > -1) {
                         newSecondMole[1] = Integer.parseInt(value[1]);  // store the charge
                     }
-                }
 
-                if (wordOrChemical > 5 && accum > 58) {
                     // validate if the ions the user inputs a correct ion name/formula
                     if (foundIon[0] == false) {
                         foundIon[0] = value[0].contains(compoundOne[0]);
@@ -565,7 +565,7 @@ public class App extends Application {
                     }
                 }
 
-                if (wordOrChemical < 5 && accum <= 58) {
+                if (wordOrChemical > 5 && accum > 58) {
                     // validate if the ions the user inputs a correct ion name/formula
                     if (foundIon[0] == false) {
                         foundIon[0] = value[0].contains(compoundOne[0]);
