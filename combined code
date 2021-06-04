@@ -532,7 +532,7 @@ public class App extends Application {
                 accum++;
 
                 // if the row arrives at 58 where the charges end, stop storing charges
-                if (accum <= 58) {
+                if (accum <= 58 && wordOrChemical < 5) {
                     // if the cation from the first compound is found
                     if (value[0].indexOf(compoundOne[0]) > -1) {
                         newFirstMole[2] = Integer.parseInt(value[1]);   // store the charge
