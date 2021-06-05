@@ -199,7 +199,13 @@ public class App extends Application {
                 String[] stringMoleOne = {"", "", ""};      // empty strings for now
                 String[] stringMoleTwo = {"", "", ""};      // empty strings for now
 
-                identifyFirstNum(compoundOne, firstMole);
+                try{
+                    identifyFirstNum(compoundOne, firstMole);
+                }
+                catch(ArrayIndexOutOfBoundsException ee){
+                    showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Cannot recognize input!", "Please reinput again!");
+                    return;
+                }
 
         // Condition: if the user inputs a chemical equation
         if (accum < 5) {
